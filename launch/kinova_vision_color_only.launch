@@ -1,7 +1,7 @@
 <launch>
 
   <!-- Node general configuration -->
-  <arg name="device" default="192.168.1.10"
+  <arg name="device" default="192.168.50.130"
         doc="Device IPv4 address" />
 
   <arg name="respawn" default="false"
