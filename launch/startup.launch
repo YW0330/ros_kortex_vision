@@ -1,0 +1,11 @@
+<launch>
+  <!-- Input the lauch file and IP address -->
+  <arg name="IP" value="192.168.50.130"/> 
+  <arg name="file_name" value="kinova_vision_rgbd"/> 
+
+
+  <!-- Execute program -->
+  <include file="$(find kinova_vision)/launch/$(arg file_name).launch">
+       <arg name="device" value="$(arg IP)" doc="Device IPv4 address" /> 
+  </include>
+</launch>

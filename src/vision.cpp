@@ -219,8 +219,7 @@ bool Vision::start()
       ROS_ERROR("[%s]: Failed to start stream", camera_name_.c_str());
       return false;
 
-    case GST_STATE_CHANGE_ASYNC:
-    {
+    case GST_STATE_CHANGE_ASYNC: {
       ret = gst_element_get_state(gst_pipeline_, NULL, NULL, STATE_CHANGE_ASYNC_TIMEOUT * GST_SECOND);
 
       switch (ret)
@@ -275,8 +274,8 @@ bool Vision::loadCameraInfo()
     nh_private_.getParam("camera_info_url_default", cam_info_default);
     if (!cam_info_default.empty())
     {
-      snprintf(cam_info_default_resolved, CAM_INFO_DEFAULT_URL_MAX_SIZE, cam_info_default.c_str(),
-               image_width_, image_height_);
+      snprintf(cam_info_default_resolved, CAM_INFO_DEFAULT_URL_MAX_SIZE, cam_info_default.c_str(), image_width_,
+               image_height_);
       camera_info_.assign(cam_info_default_resolved);
     }
     else
@@ -441,14 +440,12 @@ bool Vision::changePipelineState(GstState state)
       return true;
 
     case GST_STATE_CHANGE_FAILURE:
-      ROS_ERROR("[%s]: Failed to change pipeline state to %s",
-                camera_name_.c_str(), gst_element_state_get_name(state));
+      ROS_ERROR("[%s]: Failed to change pipeline state to %s", camera_name_.c_str(), gst_element_state_get_name(state));
       return false;
 
-    case GST_STATE_CHANGE_ASYNC:
-    {
-      ROS_ERROR("[%s]: Failed to change pipeline state to %s (timeout)",
-                camera_name_.c_str(), gst_element_state_get_name(state));
+    case GST_STATE_CHANGE_ASYNC: {
+      ROS_ERROR("[%s]: Failed to change pipeline state to %s (timeout)", camera_name_.c_str(),
+                gst_element_state_get_name(state));
       return false;
     }
 
@@ -467,7 +464,7 @@ void Vision::quit()
   {
     // In case quit was requested during a communication loss, unblock gst_app_sink_pull_sample()
     // Note that the EOS event itself doesn't cause any state transitions of the pipeline
-    GstEvent *event = NULL;
+    GstEvent* event = NULL;
     event = gst_event_new_eos();
     gst_element_send_event(gst_pipeline_, event);
   }
