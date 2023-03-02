@@ -1,11 +1,18 @@
 <launch>
   <!-- Input the lauch file and IP address -->
-  <arg name="IP" value="192.168.50.130"/> 
+  <!-- <arg name="IP" value="192.168.50.130"/>  -->
+  <arg name="IP" value="192.168.0.21"/> 
+
+
   <arg name="file_name" value="kinova_vision_rgbd"/> 
+  <!-- <arg name="file_name" value="kinova_vision_color_only"/>  -->
 
 
   <!-- Execute program -->
   <include file="$(find kinova_vision)/launch/$(arg file_name).launch">
        <arg name="device" value="$(arg IP)" doc="Device IPv4 address" /> 
   </include>
+
+  <!-- Reduce the publish rate of the point cloud for depth information to 5Hz -->
+  <node name="point_throttler" type="throttle" pkg="topic_tools" args="messages /camera/depth_registered/points 5.0" output="screen" />
 </launch>
