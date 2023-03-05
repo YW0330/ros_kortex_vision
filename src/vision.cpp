@@ -306,6 +306,8 @@ bool Vision::loadCameraInfo()
 
 bool Vision::publish()
 {
+  ros::Rate loop_rate(PUBLISH_RATE);
+
   GstSample* sample = gst_app_sink_pull_sample(GST_APP_SINK(gst_sink_));
   if (!sample)
   {
@@ -404,6 +406,7 @@ bool Vision::publish()
   gst_buffer_unmap(buf, &map);
   gst_sample_unref(sample);
 
+  loop_rate.sleep();
   return true;
 }
 

@@ -2,6 +2,7 @@
 #define KINOVA_VISION_CONSTANTS_H
 
 #include <string>
+#define PUBLISH_RATE 15
 
 const std::string DEFAULT_BASE_FRAME_ID = "camera_link";
 const std::string DEFAULT_DEPTH_FRAME_ID = "camera_depth_frame";
