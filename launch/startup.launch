@@ -1,18 +1,30 @@
 <launch>
-  <!-- Input the lauch file and IP address -->
-  <!-- <arg name="IP" value="192.168.50.130"/>  -->
+  <!-- The Kinova Vision lauch file and Kinova IP address -->
   <arg name="IP" value="192.168.0.21"/> 
-
-
   <arg name="file_name" value="kinova_vision_rgbd"/> 
-  <!-- <arg name="file_name" value="kinova_vision_color_only"/>  -->
 
-
-  <!-- Execute program -->
+  <!-- Execute Kinova Vision program -->
   <include file="$(find kinova_vision)/launch/$(arg file_name).launch">
        <arg name="device" value="$(arg IP)" doc="Device IPv4 address" /> 
   </include>
 
   <!-- Reduce the publish rate of the point cloud for depth information to 5Hz -->
-  <node name="point_throttler" type="throttle" pkg="topic_tools" args="messages /camera/depth_registered/points 5.0" output="screen" />
+  <!-- <node name="point_throttler" type="throttle" pkg="topic_tools" args="messages /camera/depth_registered/points 5.0" output="screen" /> -->
+  <!-- <node name="point_bandwith" type="throttle" pkg="topic_tools" args="bytes /camera/depth_registered/points 1024 10" /> -->
+
+
+  <!-- The IP address and port of the device for UDP protocol transmission -->
+  <arg name="udp_ip" value="192.168.50.141"/>
+  <arg name="udp_image_port" value="9090"/>
+  <arg name="udp_pointCloud2_port" value="9085"/>
+
+  <!-- Execute UDP Bridge program -->
+  <node name="UDP_Bridge_Image" pkg="kinova_vision" type="udp_Image.py" output="screen">
+      <param name="udp_ip" type="string" value="$(arg udp_ip)"/>
+      <param name="udp_image_port" type="int" value="$(arg udp_image_port)"/>
+  </node>
+  <node name="UDP_Bridge_PointCloud2" pkg="kinova_vision" type="udp_PointCloud2.py" output="screen">
+      <param name="udp_ip" type="string" value="$(arg udp_ip)"/>
+      <param name="udp_pointCloud2_port" type="int" value="$(arg udp_pointCloud2_port)"/>
+  </node>
 </launch>
