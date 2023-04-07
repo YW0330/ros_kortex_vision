@@ -14,7 +14,8 @@
 
 
   <!-- The IP address and port of the device for UDP protocol transmission -->
-  <arg name="udp_ip" value="192.168.50.141"/>
+  <!-- DHCP IP Address: MSI Desktop-192.168.0.16, Oculus-192.168.0.40 -->
+  <arg name="udp_ip" value="192.168.0.16"/>
   <arg name="udp_image_port" value="9090"/>
   <arg name="udp_pointCloud2_port" value="9085"/>
 
