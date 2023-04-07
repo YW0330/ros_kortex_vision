@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import time
 import socket
 import threading
 import rospy
@@ -24,6 +25,7 @@ class PointCloud2_Bridge():
             for i in range(0, self.pointcloud2.height, 5):
                 self.sock.sendto(self.pointcloud2.data[i*self.pointcloud2.row_step:(i*self.pointcloud2.row_step+5*self.pointcloud2.row_step)], self.udpInfo)
             self.pointcloud2 = None
+            time.sleep(0.3)
 
     def run(self):
         rospy.Subscriber("/camera/depth_registered/points", PointCloud2, self.callback,tcp_nodelay=True)

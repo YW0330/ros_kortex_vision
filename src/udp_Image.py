@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import time
 import socket
 import threading
 import rospy
@@ -24,6 +25,7 @@ class Image_Bridge():
             for i in range(0, self.image.height, 65):
                 self.sock.sendto(self.image.data[i*self.image.step:(i*self.image.step+65*self.image.step)], self.udpInfo)
             self.image = None
+            time.sleep(0.3)
 
     def run(self):
         rospy.Subscriber("/camera/color/image_raw", Image, self.callback, tcp_nodelay=True)
