@@ -17,15 +17,19 @@
   <!-- DHCP IP Address: MSI Laptop-192.168.0.16, Oculus-192.168.0.40 -->
   <arg name="udp_ip" value="192.168.0.16"/>
   <arg name="udp_image_port" value="9090"/>
+  <arg name="image_data_step" value="65"/>
   <arg name="udp_pointCloud2_port" value="9085"/>
+  <arg name="pointCloud2_data_step" value="5"/>
 
   <!-- Execute UDP Bridge program -->
   <node name="UDP_Bridge_Image" pkg="kinova_vision" type="udp_Image.py" output="screen">
       <param name="udp_ip" type="string" value="$(arg udp_ip)"/>
       <param name="udp_image_port" type="int" value="$(arg udp_image_port)"/>
+      <param name="image_data_step" type="int" value="$(arg image_data_step)"/>
   </node>
   <node name="UDP_Bridge_PointCloud2" pkg="kinova_vision" type="udp_PointCloud2.py" output="screen">
       <param name="udp_ip" type="string" value="$(arg udp_ip)"/>
       <param name="udp_pointCloud2_port" type="int" value="$(arg udp_pointCloud2_port)"/>
+      <param name="pointCloud2_data_step" type="int" value="$(arg pointCloud2_data_step)"/>
   </node>
 </launch>

@@ -6,38 +6,56 @@ import rospy
 from sensor_msgs.msg import Image
 
 
-class Image_Bridge():
-    def __init__(self,ip,port):
-        self.sock  = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.udpInfo = (ip,port)
+class Image_Bridge:
+    def __init__(self, ip, port, data_step):
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.udpInfo = (ip, port)
         self.image = None
+        self.data_step = data_step
 
-    def callback(self,msg):
+    def callback(self, msg):
         self.image = msg
-  
+
     def publish(self):
         while True:
-            if(self.image == None):
+            if self.image == None:
                 continue
-            info = [self.image.width, self.image.height, self.image.step]
+            info = [
+                self.image.width,
+                self.image.height,
+                self.image.step,
+                self.data_step,
+            ]
             send_str = " ".join(str(s) for s in info)
             self.sock.sendto(send_str.encode(), self.udpInfo)
-            for i in range(0, self.image.height, 65):
-                self.sock.sendto(self.image.data[i*self.image.step:(i*self.image.step+65*self.image.step)], self.udpInfo)
+            for i in range(0, self.image.height, self.data_step):
+                start = i * self.image.step
+                self.sock.sendto(
+                    self.image.data[start : (start + self.data_step * self.image.step)],
+                    self.udpInfo,
+                )
             self.image = None
             time.sleep(0.3)
 
     def run(self):
-        rospy.Subscriber("/camera/color/image_raw", Image, self.callback, tcp_nodelay=True)
+        rospy.Subscriber(
+            "/camera/color/image_raw",
+            Image,
+            self.callback,
+            queue_size=1,
+            tcp_nodelay=True,
+        )
         server_thread = threading.Thread(target=self.publish)
         server_thread.daemon = True
         server_thread.start()
 
 
-
-
 if __name__ == "__main__":
-    rospy.init_node('UDP_Bridge_Image', anonymous=True)
-    image_bridge = Image_Bridge(rospy.get_param("~udp_ip"), rospy.get_param("~udp_image_port"))
+    rospy.init_node("UDP_Bridge_Image", anonymous=True)
+    image_bridge = Image_Bridge(
+        rospy.get_param("~udp_ip"),
+        rospy.get_param("~udp_image_port"),
+        rospy.get_param("~image_data_step"),
+    )
     image_bridge.run()
     rospy.spin()
