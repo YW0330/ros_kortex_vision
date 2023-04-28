@@ -7,11 +7,12 @@ from sensor_msgs.msg import Image
 
 
 class Image_Bridge:
-    def __init__(self, ip, port, data_step):
+    def __init__(self, ip, port, data_step, sleepTime=0.1):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.udpInfo = (ip, port)
         self.image = None
         self.data_step = data_step
+        self.sleepTime = sleepTime
 
     def callback(self, msg):
         self.image = msg
@@ -35,7 +36,7 @@ class Image_Bridge:
                     self.udpInfo,
                 )
             self.image = None
-            time.sleep(0.3)
+            time.sleep(self.sleepTime)
 
     def run(self):
         rospy.Subscriber(
@@ -56,6 +57,7 @@ if __name__ == "__main__":
         rospy.get_param("~udp_ip"),
         rospy.get_param("~udp_image_port"),
         rospy.get_param("~image_data_step"),
+        rospy.get_param("~udp_sleep_time"),
     )
     image_bridge.run()
     rospy.spin()

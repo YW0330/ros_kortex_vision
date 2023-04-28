@@ -7,11 +7,12 @@ from sensor_msgs.msg import PointCloud2
 
 
 class PointCloud2_Bridge:
-    def __init__(self, ip, port, data_step):
+    def __init__(self, ip, port, data_step, sleepTime=0.1):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.udpInfo = (ip, port)
         self.pointcloud2 = None
         self.data_step = data_step
+        self.sleepTime = sleepTime
 
     def callback(self, msg):
         self.pointcloud2 = msg
@@ -38,7 +39,7 @@ class PointCloud2_Bridge:
                     self.udpInfo,
                 )
             self.pointcloud2 = None
-            time.sleep(0.3)
+            time.sleep(self.sleepTime)
 
     def run(self):
         rospy.Subscriber(
@@ -59,6 +60,7 @@ if __name__ == "__main__":
         rospy.get_param("~udp_ip"),
         rospy.get_param("~udp_pointCloud2_port"),
         rospy.get_param("~pointCloud2_data_step"),
+        rospy.get_param("~udp_sleep_time"),
     )
     pointcloud2_bridge.run()
     rospy.spin()
